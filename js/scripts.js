@@ -54,7 +54,6 @@ gallery.addEventListener('click', (event) => {
   const personCard = event.target.closest('.card');
   if (!personCard) return;
   const personName = personCard.querySelector('.card-name').textContent;
-  console.log(personName);
   const person = employees.find(
     (person) => `${person.name.first} ${person.name.last}` === personName
   );
@@ -110,12 +109,18 @@ function displayModal(person) {
       (person) => `${person.name.first} ${person.name.last}` === personName
     );
     const index = employees.indexOf(currentPerson);
-    console.log(index);
+
     if (index + 1 < employees.length) {
       updateModal(employees[index + 1]);
-    } else {
-      event.target.disable = true;
+      if (index + 1 === employees.length - 1) {
+        event.target.disabled = true;
+      }
     }
+
+    if (index >= 0) {
+      document.getElementById('modal-prev').removeAttribute("disabled")
+    }
+
   });
 
   /**
@@ -127,10 +132,16 @@ function displayModal(person) {
         (person) => `${person.name.first} ${person.name.last}` === personName
       );
       const index = employees.indexOf(currentPerson);
+
       if (index - 1 >= 0 ) {
         updateModal(employees[index - 1]);
-      } else {
-        event.target.disable = true;
+        if (index - 1 === 0) {
+          event.target.disabled = true;
+        }
+      }
+
+      if (index < employees.length) {
+        document.getElementById('modal-next').removeAttribute("disabled")
       }
     });
 }
