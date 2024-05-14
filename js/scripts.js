@@ -27,7 +27,6 @@ getUsers();
  * @param {array} data - an array of people objects
  */
 function displayEmployees(data) {
-  console.log(data);
   data.map(person => {
     let html = `
                 <div class="card">
@@ -59,7 +58,6 @@ gallery.addEventListener('click', (event) => {
   const person = employees.find(
     (person) => `${person.name.first} ${person.name.last}` === personName
   );
-  console.log(person);
   displayModal(person);
 });
 
@@ -88,7 +86,6 @@ function displayModal(person) {
           </div>
       </div>
 
-      // IMPORTANT: Below is only for exceeds tasks 
       <div class="modal-btn-container">
           <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
           <button type="button" id="modal-next" class="modal-next btn">Next</button>
@@ -98,11 +95,58 @@ function displayModal(person) {
   gallery.insertAdjacentHTML('afterend', html);
 
   /**
-   * Modal close button event listener
+   * Modal Close button event listener
    */
   document.getElementById('modal-close-btn').addEventListener('click', () => {
     document.querySelector('.modal-container').remove();
   });
+
+  /**
+   * Modal Next button event listener
+   */
+  document.getElementById('modal-next').addEventListener('click', (event) => {
+    const personName = document.querySelector('.modal-name').textContent;
+    const currentPerson = employees.find(
+      (person) => `${person.name.first} ${person.name.last}` === personName
+    );
+    const index = employees.indexOf(currentPerson);
+    console.log(index);
+    if (index + 1 < employees.length) {
+      updateModal(employees[index + 1]);
+    } else {
+      event.target.disable = true;
+    }
+  });
+
+  /**
+   * ModalPrevious button event listener
+   */
+    document.getElementById('modal-prev').addEventListener('click', (event) => {
+      const personName = document.querySelector('.modal-name').textContent;
+      const currentPerson = employees.find(
+        (person) => `${person.name.first} ${person.name.last}` === personName
+      );
+      const index = employees.indexOf(currentPerson);
+      if (index - 1 >= 0 ) {
+        updateModal(employees[index - 1]);
+      } else {
+        event.target.disable = true;
+      }
+    });
+}
+
+
+function updateModal(person) {
+  document.querySelector('.modal-info-container').innerHTML = `
+    <img class="modal-img" src="${person.picture.large}" alt="${person.name.first} ${person.name.last}'s profile picture">
+    <h3 id="name" class="modal-name cap">${person.name.first} ${person.name.last}</h3>
+    <p class="modal-text">${person.email}</p>
+    <p class="modal-text cap">${person.location.city}</p>
+    <hr>
+    <p class="modal-text">${person.phone}</p>
+    <p class="modal-text">${person.location.street.number} ${person.location.street.name}, ${person.location.city}, ${person.location.state} ${person.location.postcode}</p>
+    <p class="modal-text">Birthday: ${new Date(person.dob.date).toLocaleDateString(undefined, {month: 'numeric', day: 'numeric', year: 'numeric'})}</p>
+  `;
 }
 
 
