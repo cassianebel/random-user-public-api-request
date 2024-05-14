@@ -17,6 +17,7 @@ async function getUsers() {
   displayEmployees(data.results);
 }
 
+getUsers();
 
 /**
  * Display the users/'employees' on the page
@@ -44,8 +45,12 @@ function displayEmployees(data) {
   });
 }
 
-getUsers();
 
+/**
+ * Gallery event listener
+ * opens a modal with more info for the 
+ * card/employee/person that was clicked
+ */
 gallery.addEventListener('click', (event) => {
   const personCard = event.target.closest('.card');
   if (!personCard) return;
@@ -59,6 +64,13 @@ gallery.addEventListener('click', (event) => {
 });
 
 
+/**
+ * Displays a modal with content dynamically generated
+ * using the data from a specific result (person) in the 
+ * employees array
+ * 
+ * @param {object} person - a single object from the employees array
+ */
 function displayModal(person) {
   let html = `
     <div class="modal-container">
@@ -84,6 +96,15 @@ function displayModal(person) {
     </div>
   `;
   gallery.insertAdjacentHTML('afterend', html);
+
+  /**
+   * Modal close button event listener
+   */
+  document.getElementById('modal-close-btn').addEventListener('click', () => {
+    document.querySelector('.modal-container').remove();
+  });
 }
+
+
 
 
