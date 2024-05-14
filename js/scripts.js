@@ -106,5 +106,32 @@ function displayModal(person) {
 }
 
 
+/**
+ * Add search form to the page
+ */
+document.querySelector('.search-container').innerHTML = `
+  <form action="#" method="get">
+      <input type="search" id="search-input" class="search-input" placeholder="Search...">
+      <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+  </form>
+`;
+
+
+/**
+ * Listen for key strokes on search form input
+ */
+document.getElementById('search-input').addEventListener('keyup', (event) => {
+  let value = event.target.value.toLowerCase();
+  let cardNames = document.querySelectorAll('.card-name');
+  cardNames.forEach(cardName => {
+    if (cardName.textContent.toLocaleLowerCase().includes(value)) {
+      cardName.parentNode.parentNode.style.display = 'block';
+    } else {
+      cardName.parentNode.parentNode.style.display = 'none';
+    }
+  })
+});
+
+
 
 
