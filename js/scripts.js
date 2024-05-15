@@ -8,7 +8,9 @@ const gallery = document.getElementById('gallery');
 let employees = [];
 
 /**
- * Get 12 random people from the Random User API
+ * Get 12 random people from the Random User API,
+ * store them in the employees array,
+ * and display them on the page.
  */
 async function getUsers() {
   const response = await fetch("https://randomuser.me/api/?results=12&nat=us,au,gb")
@@ -74,17 +76,8 @@ function displayModal(person) {
       <div class="modal">
           <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
           <div class="modal-info-container">
-              <img class="modal-img" src="${person.picture.large}" alt="${person.name.first} ${person.name.last}'s profile picture">
-              <h3 id="name" class="modal-name cap">${person.name.first} ${person.name.last}</h3>
-              <p class="modal-text">${person.email}</p>
-              <p class="modal-text cap">${person.location.city}</p>
-              <hr>
-              <p class="modal-text">${person.phone}</p>
-              <p class="modal-text">${person.location.street.number} ${person.location.street.name}, ${person.location.city}, ${person.location.state} ${person.location.postcode}</p>
-              <p class="modal-text">Birthday: ${new Date(person.dob.date).toLocaleDateString(undefined, {month: 'numeric', day: 'numeric', year: 'numeric'})}</p>
           </div>
       </div>
-
       <div class="modal-btn-container">
           <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
           <button type="button" id="modal-next" class="modal-next btn">Next</button>
@@ -92,6 +85,7 @@ function displayModal(person) {
     </div>
   `;
   gallery.insertAdjacentHTML('afterend', html);
+  updateModalContent(person);
 
   /**
    * Modal Close button event listener
@@ -111,7 +105,7 @@ function displayModal(person) {
     const index = employees.indexOf(currentPerson);
 
     if (index + 1 < employees.length) {
-      updateModal(employees[index + 1]);
+      updateModalContent(employees[index + 1]);
       if (index + 1 === employees.length - 1) {
         event.target.disabled = true;
       }
@@ -134,7 +128,7 @@ function displayModal(person) {
       const index = employees.indexOf(currentPerson);
 
       if (index - 1 >= 0 ) {
-        updateModal(employees[index - 1]);
+        updateModalContent(employees[index - 1]);
         if (index - 1 === 0) {
           event.target.disabled = true;
         }
@@ -147,9 +141,14 @@ function displayModal(person) {
 }
 
 
-function updateModal(person) {
+/**
+ * Update the modal with content from the supplied person object
+ * 
+ * @param {object} person - a single object from the employees array
+ */
+function updateModalContent(person) {
   document.querySelector('.modal-info-container').innerHTML = `
-    <img class="modal-img" src="${person.picture.large}" alt="${person.name.first} ${person.name.last}'s profile picture">
+    <div class="modal-img img-wrapper"><img src="${person.picture.large}" alt="${person.name.first} ${person.name.last}'s profile picture"></div>
     <h3 id="name" class="modal-name cap">${person.name.first} ${person.name.last}</h3>
     <p class="modal-text">${person.email}</p>
     <p class="modal-text cap">${person.location.city}</p>
@@ -174,13 +173,14 @@ document.querySelector('.search-container').innerHTML = `
 
 /**
  * Listen for key strokes on search form input
+ * and filter results
  */
 document.getElementById('search-input').addEventListener('keyup', (event) => {
   let value = event.target.value.toLowerCase();
   let cardNames = document.querySelectorAll('.card-name');
   cardNames.forEach(cardName => {
     if (cardName.textContent.toLocaleLowerCase().includes(value)) {
-      cardName.parentNode.parentNode.style.display = 'block';
+      cardName.parentNode.parentNode.style.display = 'flex';
     } else {
       cardName.parentNode.parentNode.style.display = 'none';
     }
